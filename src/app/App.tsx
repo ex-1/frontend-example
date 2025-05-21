@@ -1,3 +1,5 @@
+import { RoutesProvieder } from './providers/RoutesProvieder'
+
 export default function App() {
-	return <div>Frontend-Example</div>
+	return <RoutesProvieder />
 }

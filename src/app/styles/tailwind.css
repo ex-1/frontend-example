@@ -1,0 +1,25 @@
+@import 'tailwindcss';
+
+@theme inline {
+	--color-fg-default: rgba(240, 240, 240, 1);
+	--color-fg-darker: rgba(240, 240, 240, 0.7);
+	--color-fg-lighter: rgba(255, 255, 255, 1);
+
+	--color-bg-default: rgb(255, 255, 255, 0.1);
+	--color-bg-darker: rgba(21, 21, 21, 0.75);
+	--color-bg-lighter: rgb(255, 255, 255, 0.2);
+
+	--color-bg-body: rgba(33, 33, 33, 1);
+
+	--color-accent-purple: #9513eb;
+}
+
+@layer base {
+	body {
+		@apply bg-bg-body text-fg-default;
+	}
+
+	button {
+		@apply hover:cursor-pointer;
+	}
+}
