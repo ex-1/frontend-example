@@ -1,0 +1,15 @@
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	scrollbar-width: none;
+	outline: none;
+}
+
+*::-webkit-scrollbar {
+	display: none;
+}
+
+html {
+	scroll-behavior: smooth;
+}

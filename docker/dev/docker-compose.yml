@@ -1,0 +1,13 @@
+services:
+  front-example:
+    container_name: front-example-dev
+    build:
+      context: ../../
+      dockerfile: ./docker/dev/Dockerfile
+    ports:
+      - '8080:8080'
+    # volumes:
+    #   - /app/node_modules/
+    #   - ../../src/:/app/src/
+    env_file:
+      - ../../env/.env.development

@@ -1,0 +1,15 @@
+services:
+  front-example:
+    container_name: front-example-prod
+    build:
+      context: ../../
+      dockerfile: ./docker/prod/Dockerfile
+    expose:
+      - '80'
+    env_file:
+      - ../../env/.env.production
+    # networks:
+    #   - front_net
+# networks:
+#   front_net:
+#     external: true
