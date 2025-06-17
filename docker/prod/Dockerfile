@@ -6,13 +6,14 @@ COPY package.json bun.lock ./
 RUN bun install
 
 # lazy to make docker ignore 
-COPY ./src ./src
-COPY ./configs ./configs
 COPY ./env ./env
+COPY ./configs ./configs
+COPY ./tsconfig.json ./tsconfig.json
+COPY ./src ./src
 COPY ./public ./public
 COPY ./index.html ./index.html
 
-RUN bun run build
+RUN bun build-app
 
 FROM nginx:alpine
 

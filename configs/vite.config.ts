@@ -1,14 +1,18 @@
 import tailwindcss from '@tailwindcss/vite'
-import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
+import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import react from '@vitejs/plugin-react-swc'
 import { resolve } from 'path'
 import { defineConfig } from 'vite'
 import svgr from 'vite-plugin-svgr'
 
 export default defineConfig({
+	root: resolve(__dirname, '../'),
+
+	envDir: 'env',
+
 	plugins: [
 		react(),
-		TanStackRouterVite({
+		tanstackRouter({
 			target: 'react',
 			autoCodeSplitting: true,
 			routesDirectory: resolve(__dirname, '../src/pages'),
@@ -21,8 +25,6 @@ export default defineConfig({
 	],
 
 	resolve: { alias: { '@': resolve(__dirname, '../src') } },
-
-	root: resolve(__dirname, '../'),
 
 	server: { host: '0.0.0.0', port: 8080 },
 

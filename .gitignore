@@ -1,5 +1,5 @@
 .vscode
+.tanstack
+
 node_modules
 dist
-
-./tsconfig.json

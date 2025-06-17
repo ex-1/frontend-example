@@ -11,31 +11,12 @@
 | `docker-down`   | Down builded project   | `down`       |
 | `docker-update` | Rebuild and up project | `up --build` |
 
-## To make the project work fine in the dev enviorment
-
-**Either**
-
-Create `tsconfig.json` in the root dir with following content:
+`.vscode/settings.json`:
 
 ```json
 {
-	"files": [],
-	"references": [{ "path": "./configs/tsconfig.json" }],
-	"compilerOptions": {
-		"baseUrl": ".",
-		"paths": { "@/*": ["src/*"] },
-		"rootDir": "src",
-		"outDir": "dist"
-	}
+	"prettier.configPath": "configs/prettier.config.cjs",
+	"eslint.options": { "overrideConfigFile": "./config/eslint.config.js" },
+	"explorer.excludeGitIgnore": true
 }
-```
-
-**Or**
-
-Uncomment these lines in `./docker/dev/docker-compose`:
-
-```
-	# volumes:
-    #   - /app/node_modules/
-    #   - ../../src/:/app/src/
 ```
