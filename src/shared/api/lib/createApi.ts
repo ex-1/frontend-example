@@ -1,13 +1,8 @@
-import {
-	//  QueryClient,
-	useSuspenseQuery
-} from '@tanstack/react-query'
-import { randomUUID } from 'crypto'
+import { QueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { useCallback } from 'react'
 
 import { fetcher } from './fetcher'
 import type {
-	// ApiSchema,
 	ApiShape,
 	CreateApi,
 	UseQueryExtraParams,
@@ -16,8 +11,9 @@ import type {
 } from './types'
 
 export function createApi<Api extends ApiShape>({ baseUrl }: CreateApi) {
-	const queryKey = randomUUID()
-	// const queryClient = new QueryClient()
+	const queryKey = '123'
+	// const queryKey = randomUUID()
+	const queryClient = new QueryClient()
 
 	const useQuery = <Url extends keyof Api, Method extends keyof Api[Url]>(
 		{ url, method, body, headers, path, query }: UseQueryParams<Api, Url, Method>,
@@ -29,8 +25,18 @@ export function createApi<Api extends ApiShape>({ baseUrl }: CreateApi) {
 			refetch: reactQueryRefetch
 		} = useSuspenseQuery({
 			queryKey: [queryKey, url, method, body, headers, path, query],
-			queryFn: () => fetcher({ url, baseUrl, method, body, headers, path, query }),
-			refetchInterval
+			queryFn: () =>
+				fetcher<Api[Url][Method]['response']>({
+					url,
+					baseUrl,
+					method,
+					body,
+					headers,
+					path,
+					query
+				}),
+			refetchInterval,
+			retry: false
 		})
 
 		const refetch = useCallback(async () => {

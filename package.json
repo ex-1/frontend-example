@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "bunx --bun vite -c configs/vite.config.ts",
 		"build-app": "tsc -p configs/tsconfig.app.json && bunx --bun vite build -c configs/vite.config.ts",
-		"lint": "eslint . -c configs/eslint.config.js",
+		"lint": "tsc -p configs/tsconfig.app.json --noEmit && eslint . -c configs/eslint.config.js",
 		"gen-types": "node src/shared/api/schema/generate.ts"
 	},
 	"dependencies": {

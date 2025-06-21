@@ -1,8 +1,3 @@
-import type { paths } from './schema/generated'
-
-// Generated api type
-export type ApiSchema = paths
-
 // Api structure type
 export type ApiShape = {
 	[url: string]: {
