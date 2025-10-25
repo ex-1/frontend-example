@@ -1,0 +1,5 @@
+{
+	"prettier.configPath": "configs/prettier.config.cjs",
+	"eslint.options": { "overrideConfigFile": "configs/eslint.config.js" },
+	"explorer.excludeGitIgnore": true
+}

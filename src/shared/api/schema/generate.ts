@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
-const SCHEMA_PATH = resolve(__dirname, 'schema.yaml') // или .json
+const SCHEMA_PATH = resolve(__dirname, 'test.json') // или .json
 const OUT_FILE = 'generated.ts'
 const TSCONFIG_PATH = '../../../../configs/tsconfig.node.json'
 
@@ -63,7 +63,7 @@ function extractParameters(params: any[] = []) {
 
 	for (const param of params) {
 		const loc = param.in as 'path' | 'query' | 'header'
-		const name = param.name
+		const name = param.required ? param.name : param.name + '?'
 		const type = transformType(param.schema)
 		if (loc === 'path' || loc === 'query' || loc === 'header') {
 			result[loc][name] = type

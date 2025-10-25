@@ -1,34 +1,14 @@
-import axios from 'axios'
+import _axios from 'axios'
 
-import { FetcherParams } from './types'
-
-export async function fetcher<Response>({
-	baseUrl,
-	url,
-	method,
-	body,
-	headers,
-	path,
-	query
-}: FetcherParams) {
-	let formatedUrl = url
-
-	if (path) {
-		Object.entries(path).forEach(([path, value]) => {
-			formatedUrl = formatedUrl.replace(`{${path}}`, String(value))
-		})
+export function fetcherFactory(baseURL: string) {
+	const params = {
+		withCredentials: true,
+		withXSRFToken: true,
+		xsrfCookieName: 'csrftoken',
+		xsrfHeaderName: 'X-CSRFToken'
 	}
 
-	console.log(formatedUrl)
+	const axios = _axios.create({ baseURL, ...params })
 
-	const res = await axios<Response>({
-		baseURL: baseUrl,
-		url: formatedUrl,
-		method,
-		headers,
-		params: query,
-		data: body
-	})
-
-	return res.data
+	return axios.request
 }

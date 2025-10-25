@@ -1,57 +1,61 @@
-import { QueryClient, useSuspenseQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { useCallback } from 'react'
 
-import { fetcher } from './fetcher'
+import { fetcherFactory } from './fetcher'
 import type {
 	ApiShape,
 	CreateApi,
-	UseQueryExtraParams,
+	HookParams,
 	UseQueryParams,
 	UseQueryReturn
 } from './types'
+import { processTemplateUrl } from './utils'
 
 export function createApi<Api extends ApiShape>({ baseUrl }: CreateApi) {
-	const queryKey = '123'
-	// const queryKey = randomUUID()
-	const queryClient = new QueryClient()
+	const fetcher = fetcherFactory(baseUrl)
 
 	const useQuery = <Url extends keyof Api, Method extends keyof Api[Url]>(
-		{ url, method, body, headers, path, query }: UseQueryParams<Api, Url, Method>,
-		{ refetchInterval }: UseQueryExtraParams = {}
+		{ url, method, body, headers, path, query }: HookParams<Api, Url, Method>,
+		{ refetchInterval, gcTime, staleTime, qKey }: UseQueryParams = {}
 	): UseQueryReturn<Api[Url][Method]['response']> => {
-		const {
-			data,
-			isFetching,
-			refetch: reactQueryRefetch
-		} = useSuspenseQuery({
-			queryKey: [queryKey, url, method, body, headers, path, query],
-			queryFn: () =>
-				fetcher<Api[Url][Method]['response']>({
-					url,
-					baseUrl,
-					method,
-					body,
-					headers,
-					path,
-					query
-				}),
+		const requestUrl = processTemplateUrl(url, path)
+
+		const queryKey = [url, method, body, headers, path, query]
+		if (qKey) queryKey.push(qKey)
+
+		const queryFn = async () => {
+			const res = await fetcher<Api[Url][Method]['response']>({
+				url: requestUrl,
+				data: body,
+				params: query,
+				method,
+				headers
+			})
+
+			return res.data
+		}
+
+		const { data, isFetching, refetch } = useSuspenseQuery({
+			queryKey,
+			queryFn,
 			refetchInterval,
-			retry: false
+			retry: false,
+			gcTime,
+			staleTime
 		})
 
-		const refetch = useCallback(async () => {
-			await reactQueryRefetch()
-		}, [reactQueryRefetch])
+		const refetchQuery = useCallback(async () => {
+			await refetch()
+		}, [refetch])
 
-		return { response: data!, isFetching, refetch }
+		const ret: [typeof data, boolean, typeof refetchQuery] = [
+			data,
+			isFetching,
+			refetchQuery
+		]
+
+		return Object.assign(ret, { data, isFetching, refetchQuery })
 	}
 
 	return { useQuery }
 }
-
-// const { useQuery } = createApi<ApiSchema>({ baseUrl: 'http://localhost:8000' })
-// const { response, isFetching, refetch } = useQuery({
-// 	url: '/pet',
-// 	method: 'POST',
-// 	body: { name: '123', photoUrls: ['test'] }
-// })

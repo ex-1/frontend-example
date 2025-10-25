@@ -21,8 +21,7 @@ export type ApiShape = {
 
 export type CreateApi = { baseUrl: string }
 
-// useQuery Types
-export type UseQueryParams<
+export type HookParams<
 	Api extends ApiShape,
 	Url extends keyof Api,
 	Method extends keyof Api[Url]
@@ -30,14 +29,31 @@ export type UseQueryParams<
 	[K in keyof Api[Url][Method]['request']]: Api[Url][Method]['request'][K]
 }
 
-export type UseQueryExtraParams = { refetchInterval?: number }
+// useQuery Types
+export type UseQueryParams = Partial<{
+	refetchInterval: number // ms
+	gcTime: number // ms
+	staleTime: number // ms
+	qKey: string
+}>
 
-export type UseQueryReturn<Response> = {
-	response: Response
+export type UseQueryReturn<Response> = [
+	data: Response,
+	isFetching: boolean,
+	refetchQuery: () => Promise<void>
+] & {
+	data: Response
 	isFetching: boolean
-	refetch: () => Promise<void>
+	refetchQuery: () => Promise<void>
 }
 
-// fetcher types
-export type FetcherParams = ApiShape[string][string]['request'] &
-	Pick<CreateApi, 'baseUrl'>
+// useAction Types
+type Invalidate<Request, Response> =
+	| string[]
+	| ((req: Request, res: Response) => string[])
+
+export type UseActionParams<Response, Request> = Partial<{
+	invalidate: Invalidate<Response, Request>
+	onSuccess: (data: Response) => void
+	onError: (error: unknown) => void
+}>

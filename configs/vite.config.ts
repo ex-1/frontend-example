@@ -8,7 +8,7 @@ import svgr from 'vite-plugin-svgr'
 export default defineConfig({
 	root: resolve(__dirname, '../'),
 
-	envDir: 'env',
+	envDir: './env',
 
 	plugins: [
 		react(),
@@ -20,13 +20,16 @@ export default defineConfig({
 			generatedRouteTree: resolve(__dirname, '../src/app/config/route.gen.ts'),
 			quoteStyle: 'single'
 		}),
-		svgr({ include: [resolve(__dirname, '../src/shared/icons')] }),
+		svgr({
+			include: ['**/*.svg?react'],
+			svgrOptions: { icon: '100%' }
+		}),
 		tailwindcss()
 	],
 
 	resolve: { alias: { '@': resolve(__dirname, '../src') } },
 
-	server: { host: '0.0.0.0', port: 8080 },
+	server: { host: '127.0.0.1', port: 8000 },
 
 	build: { sourcemap: false }
 })
